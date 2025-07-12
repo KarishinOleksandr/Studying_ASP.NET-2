@@ -1,0 +1,33 @@
+GET https://localhost:7267/trucks
+
+###
+
+GET https://localhost:7267/trucks/8
+
+###
+
+POST https://localhost:7267/trucks
+Content-Type:	application/json
+
+{
+	"Model": "Testsubj",
+	"Brand": "Volvo",
+	"Price": 9000,
+	"ReleaseSate": "1999-05-08"
+}
+
+###
+
+PUT https://localhost:7267/trucks/4
+Content-Type: application/json
+
+{
+"Model": "Model129",
+   "Brand": "BMW",
+   "Price": 55000,
+   "ReleaseSate": "2025-09-09"
+}
+
+###
+
+DELETE https://localhost:7267/trucks/1
