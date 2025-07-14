@@ -11,19 +11,23 @@ namespace TestTruckStore.Api.Endpoints
                     1,
                     "Model123",
                     "Marcedes",
-                    55000M,
+                    160,
+                    40,
+                    55000,
                     new DateOnly(2004, 8, 5)),
                 new (
                     2,
                     "Model124",
                     "Marcedes",
-                    56000M  ,
+                    140,
+                    50,
+                    56000,
                     new DateOnly(2004, 8, 5))
         ];
 
         public static RouteGroupBuilder MapTruckEndpoint(this WebApplication app)
         {
-            var group = app.MapGroup("trucks");
+            var group = app.MapGroup("trucks").WithParameterValidation();
 
             // GET / READ
             group.MapGet("/", () => trucks);
@@ -37,7 +41,16 @@ namespace TestTruckStore.Api.Endpoints
             // POST / CREATE
             group.MapPost("/", (CreateTruckDto addTruck) =>
             {
-                TruckDto newTruck = new(trucks.Count + 1, addTruck.Model, addTruck.Brand, addTruck.Price, addTruck.ReleaseSate);
+
+
+                TruckDto newTruck = new(
+                    trucks.Count + 1, 
+                    addTruck.Model, 
+                    addTruck.Brand, 
+                    addTruck.maxSpeed, 
+                    addTruck.maxLiftingCapacity, 
+                    addTruck.Price, 
+                    addTruck.ReleaseSate);
 
                 trucks.Add(newTruck);
 
@@ -51,13 +64,27 @@ namespace TestTruckStore.Api.Endpoints
 
                 if (index == -1)
                 {
-                    TruckDto newTruck = new(trucks.Count + 1, updateTruck.Model, updateTruck.Brand, updateTruck.Price, updateTruck.ReleaseSate);
+                    TruckDto newTruck = new(
+                        trucks.Count + 1,
+                        updateTruck.Model,
+                        updateTruck.Brand,
+                        updateTruck.maxSpeed,
+                        updateTruck.maxLiftingCapacity,
+                        updateTruck.Price,
+                        updateTruck.ReleaseSate);
                     trucks.Add(newTruck);
 
                     return Results.CreatedAtRoute(GetTruckEndpoint, new { id = newTruck.Id }, newTruck);
                 }
 
-                trucks[index] = new TruckDto(id, updateTruck.Model, updateTruck.Brand, updateTruck.Price, updateTruck.ReleaseSate);
+                trucks[index] = new TruckDto(
+                    id, 
+                    updateTruck.Model, 
+                    updateTruck.Brand, 
+                    updateTruck.maxSpeed, 
+                    updateTruck.maxLiftingCapacity, 
+                    updateTruck.Price, 
+                    updateTruck.ReleaseSate);
 
                 return Results.NoContent();
             });

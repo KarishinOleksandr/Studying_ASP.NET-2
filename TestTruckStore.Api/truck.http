@@ -2,7 +2,7 @@ GET https://localhost:7267/trucks
 
 ###
 
-GET https://localhost:7267/trucks/8
+GET https://localhost:7267/trucks/1
 
 ###
 
