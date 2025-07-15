@@ -1,4 +1,8 @@
-﻿using TestTruckStore.Api.Dtos;
+﻿using Microsoft.EntityFrameworkCore;
+using TestTruckStore.Api.Data;
+using TestTruckStore.Api.Dtos;
+using TestTruckStore.Api.Mapping;
+using TestTruckStore.Api.Models;
 
 namespace TestTruckStore.Api.Endpoints
 {
@@ -6,92 +10,67 @@ namespace TestTruckStore.Api.Endpoints
     {
         const string GetTruckEndpoint = "GetTruck";
 
-        private static readonly List<TruckDto> trucks = [
-                new(
-                    1,
-                    "Model123",
-                    "Marcedes",
-                    160,
-                    40,
-                    55000,
-                    new DateOnly(2004, 8, 5)),
-                new (
-                    2,
-                    "Model124",
-                    "Marcedes",
-                    140,
-                    50,
-                    56000,
-                    new DateOnly(2004, 8, 5))
-        ];
-
         public static RouteGroupBuilder MapTruckEndpoint(this WebApplication app)
         {
             var group = app.MapGroup("trucks").WithParameterValidation();
 
             // GET / READ
-            group.MapGet("/", () => trucks);
-            group.MapGet("/{id}", (int id) =>
+            group.MapGet("/", async (TruckStoreContext dbContext) => 
+                await dbContext.Trucks.Include(truck => truck.BrandName).Select(truck => truck.ToDto()).AsNoTracking().ToListAsync());
+            group.MapGet("/{id}", async (int id, TruckStoreContext dbContext) =>
             {
-                TruckDto? truck = trucks.Find(truck => truck.Id == id);
+                Truck? truck = await dbContext.Trucks.FindAsync(id);
+                if (truck == null)
+                {
+                    return Results.NotFound();
+                }
+                truck.BrandName = await dbContext.Brands.FindAsync(truck.BrandId);
 
-                return truck is null ? Results.NotFound() : Results.Ok(truck);
+                return Results.Ok(truck.ToDto());
             }).WithName(GetTruckEndpoint);
 
             // POST / CREATE
-            group.MapPost("/", (CreateTruckDto addTruck) =>
+            group.MapPost("/", async (CreateTruckDto addTruck, TruckStoreContext dbContext) =>
             {
 
+                Truck truck = addTruck.ToEntity();  
+                truck.BrandName = dbContext.Brands.Find(addTruck.BrandId);
 
-                TruckDto newTruck = new(
-                    trucks.Count + 1, 
-                    addTruck.Model, 
-                    addTruck.Brand, 
-                    addTruck.maxSpeed, 
-                    addTruck.maxLiftingCapacity, 
-                    addTruck.Price, 
-                    addTruck.ReleaseSate);
+                dbContext.Trucks.Add(truck);
 
-                trucks.Add(newTruck);
+                await dbContext.SaveChangesAsync();
 
-                return Results.CreatedAtRoute(GetTruckEndpoint, new { id = newTruck.Id }, newTruck);
+                return Results.CreatedAtRoute(GetTruckEndpoint, new { id = truck.Id }, truck.ToDto());
             });
 
             // PUT / UPDATE
-            group.MapPut("/{id}", (int id, UpdateTruckDto updateTruck) =>
-            { 
-                var index = trucks.FindIndex(truck => truck.Id == id);
+            group.MapPut("/{id}", async (int id, UpdateTruckDto updateTruck, TruckStoreContext dbContext) =>
+            {
+                var exist = await dbContext.Trucks.FindAsync(id);
 
-                if (index == -1)
+                if (exist is null)
                 {
-                    TruckDto newTruck = new(
-                        trucks.Count + 1,
-                        updateTruck.Model,
-                        updateTruck.Brand,
-                        updateTruck.maxSpeed,
-                        updateTruck.maxLiftingCapacity,
-                        updateTruck.Price,
-                        updateTruck.ReleaseSate);
-                    trucks.Add(newTruck);
+                    Truck truck =  updateTruck.ToEntity(id);
+                    truck.BrandName = dbContext.Brands.Find(updateTruck.BrandId);
 
-                    return Results.CreatedAtRoute(GetTruckEndpoint, new { id = newTruck.Id }, newTruck);
+                    dbContext.Trucks.Add(truck);
+
+                    await dbContext.SaveChangesAsync();
+
+                    return Results.CreatedAtRoute(GetTruckEndpoint, new { id = truck.Id }, truck.ToDto());
                 }
 
-                trucks[index] = new TruckDto(
-                    id, 
-                    updateTruck.Model, 
-                    updateTruck.Brand, 
-                    updateTruck.maxSpeed, 
-                    updateTruck.maxLiftingCapacity, 
-                    updateTruck.Price, 
-                    updateTruck.ReleaseSate);
+                dbContext.Entry(exist).CurrentValues.SetValues(updateTruck.ToEntity(id));
+                await dbContext.SaveChangesAsync();
 
                 return Results.NoContent();
             });
 
-            group.MapDelete("/{id}", (int id) =>
+            group.MapDelete("/{id}", async (int id, TruckStoreContext dbContext) =>
             {
-                trucks.RemoveAll(trucks => trucks.Id == id);
+                var exist = dbContext.Trucks.Find(id);
+                dbContext.Remove(exist);
+                await dbContext.SaveChangesAsync();
 
                 return Results.NoContent();
             });

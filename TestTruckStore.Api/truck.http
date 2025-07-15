@@ -2,7 +2,7 @@ GET https://localhost:7267/trucks
 
 ###
 
-GET https://localhost:7267/trucks/1
+GET https://localhost:7267/trucks/14
 
 ###
 
@@ -10,24 +10,28 @@ POST https://localhost:7267/trucks
 Content-Type:	application/json
 
 {
-	"Model": "Testsubj",
-	"Brand": "Volvo",
+	"Model": "Testsubj33",
+	"BrandId": 3,
+	"maxSpeed": 120,
+	"maxLiftingCapacity": 40,
 	"Price": 9000,
 	"ReleaseSate": "1999-05-08"
 }
 
 ###
 
-PUT https://localhost:7267/trucks/4
+PUT https://localhost:7267/trucks/3
 Content-Type: application/json
 
 {
-"Model": "Model129",
-   "Brand": "BMW",
-   "Price": 55000,
-   "ReleaseSate": "2025-09-09"
+	 "Model": "Model129",
+   "BrandId": 4,
+	 "maxSpeed": 120,
+	 "maxLiftingCapacity": 40,
+	 "Price": 9000,
+	 "ReleaseSate": "1999-05-08"
 }
 
 ###
 
-DELETE https://localhost:7267/trucks/1
+DELETE https://localhost:7267/trucks/13
