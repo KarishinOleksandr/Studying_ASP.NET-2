@@ -13,6 +13,7 @@ namespace TestTruckStore.Api
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<TruckStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
             var app = builder.Build();
 

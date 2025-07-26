@@ -2,7 +2,7 @@
 
 namespace TestTruckStore.Api.Dtos
 {
-    public record class CreateTruckDto( 
+    public record CreateTruckDto( 
         [Required][StringLength(50)] string Model, 
         [Required] int BrandId, 
         [Required][Range(60, 180)] int maxSpeed,

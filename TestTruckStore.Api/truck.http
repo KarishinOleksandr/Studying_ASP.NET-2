@@ -2,7 +2,7 @@ GET https://localhost:7267/trucks
 
 ###
 
-GET https://localhost:7267/trucks/14
+GET https://localhost:7267/trucks/12
 
 ###
 
@@ -10,8 +10,8 @@ POST https://localhost:7267/trucks
 Content-Type:	application/json
 
 {
-	"Model": "Testsubj33",
-	"BrandId": 3,
+	"Model": "NEwTruck",
+	"BrandId": 1,
 	"maxSpeed": 120,
 	"maxLiftingCapacity": 40,
 	"Price": 9000,
@@ -20,12 +20,12 @@ Content-Type:	application/json
 
 ###
 
-PUT https://localhost:7267/trucks/3
+PUT https://localhost:7267/trucks/21
 Content-Type: application/json
 
 {
-	 "Model": "Model129",
-   "BrandId": 4,
+	 "Model": "MemeModel2",
+   "BrandId": 5,
 	 "maxSpeed": 120,
 	 "maxLiftingCapacity": 40,
 	 "Price": 9000,
@@ -34,4 +34,4 @@ Content-Type: application/json
 
 ###
 
-DELETE https://localhost:7267/trucks/13
+DELETE https://localhost:7267/trucks/14

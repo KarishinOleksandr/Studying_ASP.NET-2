@@ -1,4 +1,4 @@
 ﻿namespace TestTruckStore.Api.Dtos
 {
-    public record class BrandDtocs(int Id, string Name);
+    public record BrandDtocs(int Id, string Name);
 }

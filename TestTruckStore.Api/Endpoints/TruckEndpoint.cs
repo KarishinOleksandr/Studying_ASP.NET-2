@@ -3,6 +3,10 @@ using TestTruckStore.Api.Data;
 using TestTruckStore.Api.Dtos;
 using TestTruckStore.Api.Mapping;
 using TestTruckStore.Api.Models;
+using MediatR;
+using TestTruckStore.Api.Queries;
+using TestTruckStore.Api.Command;
+
 
 namespace TestTruckStore.Api.Endpoints
 {
@@ -15,60 +19,44 @@ namespace TestTruckStore.Api.Endpoints
             var group = app.MapGroup("trucks").WithParameterValidation();
 
             // GET / READ
-            group.MapGet("/", async (TruckStoreContext dbContext) => 
-                await dbContext.Trucks.Include(truck => truck.BrandName).Select(truck => truck.ToDto()).AsNoTracking().ToListAsync());
-            group.MapGet("/{id}", async (int id, TruckStoreContext dbContext) =>
+            group.MapGet("/", async (IMediator mediator) => 
+                await mediator.Send(new GetTruckQuery(), new CancellationToken()));
+            group.MapGet("/{id}", async (int id, IMediator mediator) =>
             {
-                Truck? truck = await dbContext.Trucks.FindAsync(id);
-                if (truck == null)
+                TruckDto? truckDto = await mediator.Send(new GetTruckByidQuery(id), new CancellationToken());
+                if (truckDto == null)
                 {
                     return Results.NotFound();
                 }
-                truck.BrandName = await dbContext.Brands.FindAsync(truck.BrandId);
 
-                return Results.Ok(truck.ToDto());
+                return Results.Ok(truckDto);
             }).WithName(GetTruckEndpoint);
 
             // POST / CREATE
-            group.MapPost("/", async (CreateTruckDto addTruck, TruckStoreContext dbContext) =>
+            group.MapPost("/", async (CreateTruckCommand command, IMediator mediator) =>
             {
-
-                Truck truck = addTruck.ToEntity();  
-                truck.BrandName = dbContext.Brands.Find(addTruck.BrandId);
-
-                dbContext.Trucks.Add(truck);
-
-                await dbContext.SaveChangesAsync();
+                Truck truck = await mediator.Send(command);
 
                 return Results.CreatedAtRoute(GetTruckEndpoint, new { id = truck.Id }, truck.ToDto());
             });
 
             // PUT / UPDATE
-            group.MapPut("/{id}", async (int id, UpdateTruckDto updateTruck, TruckStoreContext dbContext) =>
+            group.MapPut("/{id}", async (int id, UpdateTruckCommand command, IMediator mediator) =>
             {
-                var exist = await dbContext.Trucks.FindAsync(id);
+                var updatedCommand = command with { Id = id };
 
-                if (exist is null)
-                {
-                    Truck truck =  updateTruck.ToEntity(id);
-                    truck.BrandName = dbContext.Brands.Find(updateTruck.BrandId);
+                Truck truck = await mediator.Send(updatedCommand);
 
-                    dbContext.Trucks.Add(truck);
-
-                    await dbContext.SaveChangesAsync();
-
-                    return Results.CreatedAtRoute(GetTruckEndpoint, new { id = truck.Id }, truck.ToDto());
-                }
-
-                dbContext.Entry(exist).CurrentValues.SetValues(updateTruck.ToEntity(id));
-                await dbContext.SaveChangesAsync();
-
-                return Results.NoContent();
+                return Results.Ok(truck);
             });
 
             group.MapDelete("/{id}", async (int id, TruckStoreContext dbContext) =>
             {
                 var exist = dbContext.Trucks.Find(id);
+                if ( exist is null)
+                {
+                    return Results.NotFound();
+                }
                 dbContext.Remove(exist);
                 await dbContext.SaveChangesAsync();
 

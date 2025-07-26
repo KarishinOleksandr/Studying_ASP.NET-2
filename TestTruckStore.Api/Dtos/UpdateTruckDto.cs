@@ -2,7 +2,7 @@
 
 namespace TestTruckStore.Api.Dtos
 {
-    public record class UpdateTruckDto(
+    public record UpdateTruckDto(
         [Required][StringLength(50)] string Model,
         [Required]int BrandId,
         [Required][Range(60, 180)] int maxSpeed,
