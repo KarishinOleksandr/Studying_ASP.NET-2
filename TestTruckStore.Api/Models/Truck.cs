@@ -12,7 +12,7 @@
 
         public int Price { get; set; }
 
-        public DateOnly ReleaseSate { get; set; }
+        public DateOnly ReleaseDate { get; set; }
 
         public int BrandId { get; set; }
 

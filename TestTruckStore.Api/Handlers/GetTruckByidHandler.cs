@@ -28,7 +28,7 @@ namespace TestTruckStore.Api.Handlers
                     t.maxSpeed,
                     t.maxLiftingCapacity,
                     t.Price,
-                    t.ReleaseSate
+                    t.ReleaseDate
                 ))
                 .FirstOrDefaultAsync(cancellationToken);
 

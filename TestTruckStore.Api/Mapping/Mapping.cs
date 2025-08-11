@@ -15,7 +15,7 @@ namespace TestTruckStore.Api.Mapping
                 maxSpeed = truck.maxSpeed,
                 maxLiftingCapacity = truck.maxLiftingCapacity,
                 Price = truck.Price,
-                ReleaseSate = truck.ReleaseSate
+                ReleaseDate = truck.ReleaseDate
 
             };
         }
@@ -29,7 +29,7 @@ namespace TestTruckStore.Api.Mapping
                 maxSpeed = truck.maxSpeed,
                 maxLiftingCapacity = truck.maxLiftingCapacity,
                 Price = truck.Price,
-                ReleaseSate = truck.ReleaseSate
+                ReleaseDate = truck.ReleaseDate
 
             };
         }
@@ -45,7 +45,7 @@ namespace TestTruckStore.Api.Mapping
                 truck.maxSpeed,
                 truck.maxLiftingCapacity,
                 truck.Price,
-                truck.ReleaseSate
+                truck.ReleaseDate
             );
         }
     }

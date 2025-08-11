@@ -15,7 +15,7 @@ Content-Type:	application/json
 	"maxSpeed": 120,
 	"maxLiftingCapacity": 40,
 	"Price": 9000,
-	"ReleaseSate": "1999-05-08"
+	"ReleaseDate": "1999-05-08"
 }
 
 ###
@@ -29,9 +29,9 @@ Content-Type: application/json
 	 "maxSpeed": 120,
 	 "maxLiftingCapacity": 40,
 	 "Price": 9000,
-	 "ReleaseSate": "1999-05-08"
+	 "ReleaseDate": "1999-05-08"
 }
 
 ###
 
-DELETE https://localhost:7267/trucks/14
+DELETE https://localhost:7267/trucks/21

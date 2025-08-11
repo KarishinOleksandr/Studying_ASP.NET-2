@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestTruckStore.Api.Data;
 
@@ -11,9 +12,11 @@ using TestTruckStore.Api.Data;
 namespace TestTruckStore.Api.Migrations
 {
     [DbContext(typeof(TruckStoreContext))]
-    partial class TruckStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250806172240_Repair")]
+    partial class Repair
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,7 +87,7 @@ namespace TestTruckStore.Api.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("ReleaseDate")
+                    b.Property<DateOnly>("ReleaseSate")
                         .HasColumnType("date");
 
                     b.Property<int>("maxLiftingCapacity")

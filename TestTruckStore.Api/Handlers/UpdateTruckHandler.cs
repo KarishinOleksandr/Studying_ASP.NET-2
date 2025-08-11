@@ -32,7 +32,7 @@ namespace TestTruckStore.Api.Handlers
                     maxSpeed = request.maxSpeed,
                     maxLiftingCapacity = request.maxLiftingCapacity,
                     Price = request.Price,
-                    ReleaseSate = request.ReleaseSate,
+                    ReleaseDate = request.ReleaseDate,
                 };
                 truck.BrandName = await _context.Brands.FindAsync(request.BrandId);
                 await _context.AddAsync(truck);

@@ -33,7 +33,7 @@ namespace TestTruckStore.Api.Handlers
                     el.maxSpeed,
                     el.maxLiftingCapacity,
                     el.Price,
-                    el.ReleaseSate
+                    el.ReleaseDate
                 ));
             }
 
