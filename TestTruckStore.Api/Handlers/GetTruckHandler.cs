@@ -18,6 +18,7 @@ namespace TestTruckStore.Api.Handlers
 
         public async Task<TruckDto[]> Handle(GetTruckQuery request, CancellationToken cancellationToken)
         {
+            Task.Delay(500).Wait();
             var trucks = await _context.Trucks.Include(t => t.BrandName).ToListAsync(cancellationToken);
 
             var truckDtos =  new List<TruckDto>();
